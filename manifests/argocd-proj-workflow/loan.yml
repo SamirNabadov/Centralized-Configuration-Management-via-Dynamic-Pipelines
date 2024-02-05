@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: loan
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: "loan project"
+  sourceRepos:
+  - '*'
+  destinations:
+  - namespace: 'loan'
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  namespaceResourceWhitelist:
+  - group: "*"
+    kind: "*"
+  roles:
+  - name: "loan-application-admin"
+    description: "loan team's deployment role"
+    policies:
+    - p, proj:loan:loan-application-admin, applications, *, loan/*, allow
+    groups:
+    - "loan"
+  orphanedResources:
+    warn: true
