@@ -6,7 +6,7 @@ generate-child-pipeline:
   stage: generate-child-pipeline
   image: ${CI_SERVER_HOST}:4567/devops/image/python:latest
   script:
-    - pip3 install -r requirements.txt && python3 main.py
+    - cd scripts && pip3 install -r requirements.txt && python3 main.py
   artifacts:
     paths:
       - child-pipeline-gitlab-ci.yml
