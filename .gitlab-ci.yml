@@ -1,0 +1,22 @@
+stages:
+  - generate-child-pipeline
+  - trigger-child-pipeline
+  
+generate-child-pipeline:
+  stage: generate-child-pipeline
+  image: ${CI_SERVER_HOST}:4567/devops/image/python:latest
+  script:
+    - pip3 install -r requirements.txt && python3 main.py
+  artifacts:
+    paths:
+      - child-pipeline-gitlab-ci.yml
+    expire_in: 1 day
+
+trigger-child-pipeline:
+  stage: trigger-child-pipeline
+  trigger:
+    include:
+      - artifact: child-pipeline-gitlab-ci.yml
+        job: generate-child-pipeline
+    strategy: depend
+
